@@ -195,10 +195,10 @@ extraContainers: |
 persistence:
   type: pvc
   enabled: true
-  # storageClassName: default
+  storageClassName: managed-nfs-storage
   accessModes:
     - ReadWriteOnce
-  size: 10Gi
+  size: 1024Mi
   # annotations: {}
   finalizers:
     - kubernetes.io/pvc-protection
@@ -221,13 +221,13 @@ initChownData:
   ## initChownData resource requests and limits
   ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources: {}
-  #  limits:
-  #    cpu: 100m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 128Mi
+  resources:
+    limits:
+      cpu: 100m
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
 
 
 # Administrator credentials when not using an existing secret (see below)
