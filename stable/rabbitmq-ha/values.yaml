@@ -362,12 +362,9 @@ updateStrategy: OnDelete
 ## rabbitmqMemoryHighWatermark following the formula:
 ##   rabbitmqMemoryHighWatermark = 0.4 * resources.limits.memory
 ##
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 1Gi
-  # requests:
-  #   cpu: 100m
+resources:
+  #   limits:
+  #   cpu: 1000m
   #   memory: 1Gi
    requests:
      cpu: 100m

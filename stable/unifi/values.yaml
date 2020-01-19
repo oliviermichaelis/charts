@@ -7,7 +7,7 @@ strategyType: Recreate
 
 image:
   repository: jacobalberty/unifi
-  tag: 5.12.35
+  tag: 5.12.35-arm32v7
   pullPolicy: IfNotPresent
 
 # If enabled, the controller, discovery, GUI, and STUN services will not be
@@ -98,7 +98,7 @@ captivePortalService:
     #      - chart-example.local
 
 controllerService:
-  type: NodePort
+  type: LoadBalancer
   port: 8080
   ## Specify the nodePort value for the LoadBalancer and NodePort service types.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
@@ -108,18 +108,19 @@ controllerService:
   ## set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations: {}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: unifi-svc
   labels: {}
   ## Use loadBalancerIP to request a specific static IP,
   ## otherwise leave blank
   ##
-  loadBalancerIP:
+  loadBalancerIP: 192.168.1.243
   # loadBalancerSourceRanges: []
   ## Set the externalTrafficPolicy in the Service to either Cluster or Local
   # externalTrafficPolicy: Cluster
 
 stunService:
-  type: NodePort
+  type: LoadBalancer
   port: 3478   # udp
   ## Specify the nodePort value for the LoadBalancer and NodePort service types.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
@@ -129,18 +130,19 @@ stunService:
   ## set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations: {}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: unifi-svc
   labels: {}
   ## Use loadBalancerIP to request a specific static IP,
   ## otherwise leave blank
   ##
-  loadBalancerIP:
+  loadBalancerIP: 192.168.1.243
   # loadBalancerSourceRanges: []
   ## Set the externalTrafficPolicy in the Service to either Cluster or Local
   # externalTrafficPolicy: Cluster
 
 discoveryService:
-  type: NodePort
+  type: LoadBalancer
   port: 10001  # udp
   ## Specify the nodePort value for the LoadBalancer and NodePort service types.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
@@ -150,25 +152,27 @@ discoveryService:
   ## set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations: {}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: unifi-svc
+
   labels: {}
   ## Use loadBalancerIP to request a specific static IP,
   ## otherwise leave blank
   ##
-  loadBalancerIP:
+  loadBalancerIP: 192.168.1.243
   # loadBalancerSourceRanges: []
   ## Set the externalTrafficPolicy in the Service to either Cluster or Local
   # externalTrafficPolicy: Cluster
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
     # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - chart-example.local
+    - unifi.lab.oliviermichaelis.dev
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -249,17 +253,17 @@ extraConfigFiles: {}
   #     </Loggers>
   #   </Configuration>
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 256m
+    memory: 512Mi
 
 nodeSelector: {}
 
