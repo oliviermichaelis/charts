@@ -27,16 +27,17 @@ hostNetwork:
   enabled: false
 
 image:
-  repository: k8s.gcr.io/metrics-server-amd64
+  repository: gcr.io/google_containers/metrics-server-arm
   tag: v0.3.6
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 # - registrySecretName
 
-args: []
+args:
 # enable this if you have self-signed certificates, see: https://github.com/kubernetes-incubator/metrics-server
-#  - --kubelet-insecure-tls
+  - --kubelet-insecure-tls
+  - --kubelet-preferred-address-types=InternalIP
 
 resources: {}
 

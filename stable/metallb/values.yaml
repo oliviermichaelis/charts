@@ -8,7 +8,7 @@
 # existingConfigMap specifies the name of an externally-defined
 # ConfigMap to use as the configuration. Helm will not manage the
 # contents of this ConfigMap, it is your responsibility to create it.
-existingConfigMap: metallb-config
+#existingConfigMap: metallb-config
 
 # configInline specifies MetalLB's configuration directly, in yaml
 # format. When configInline is used, Helm manages MetalLB's
@@ -17,7 +17,12 @@ existingConfigMap: metallb-config
 #
 # Refer to https://metallb.universe.tf/configuration/ for
 # available options.
-configInline: {}
+configInline:
+  address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 192.168.1.230-192.168.1.249
 
 rbac:
   # create specifies whether to install and use RBAC rules.
@@ -93,10 +98,13 @@ controller:
     repository: metallb/controller
     tag: v0.8.1
     pullPolicy: IfNotPresent
-  resources: {}
-    # limits:
-      # cpu: 100m
-      # memory: 100Mi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+     limits:
+       cpu: 100m
+       memory: 64Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -108,10 +116,13 @@ speaker:
     repository: metallb/speaker
     tag: v0.8.1
     pullPolicy: IfNotPresent
-  resources: {}
-    # limits:
-      # cpu: 100m
-      # memory: 100Mi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+       cpu: 100m
+       memory: 64Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}

@@ -17,7 +17,7 @@ testFramework:
 
 ## can switch the service type to NodePort if required
 serviceType: LoadBalancer
-# loadBalancerIP: ""
+loadBalancerIP: 192.168.1.241
 # loadBalancerSourceRanges: []
 whiteListSourceRange: []
 externalTrafficPolicy: Cluster
@@ -66,10 +66,12 @@ tolerations: []
 #   value: "value"
 #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 ## Kubernetes ingress filters
-# kubernetes:
+kubernetes:
   # endpoint:
-  # namespaces:
-  # - default
+  namespaces:
+  - default
+  - kube-system
+  - kubernetes-dashboard
   # labelSelector:
   # ingressClass:
   # ingressEndpoint:
@@ -121,11 +123,11 @@ secretFiles: {}
   #   filecontents...
 
 ssl:
-  enabled: false
-  enforced: false
+  enabled: true
+  enforced: true
   permanentRedirect: false
   upstream: false
-  insecureSkipVerify: false
+  insecureSkipVerify: true
   generateTLS: false
   # defaultCN: "example.com"
     # or *.example.com
@@ -220,14 +222,14 @@ kvprovider:
 
 acme:
   keyType: RSA4096
-  enabled: false
-  email: admin@example.com
+  enabled: true
+  email: michaelis.olivier@gmail.com
   onHostRule: true
-  staging: true
+  staging: false
   ## Specify a custom ACME server endpoint
   ## Optional
   # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-  logging: false
+  logging: true
   # Configure a Let's Encrypt certificate to be managed by default.
   # This is the only way to request wildcard certificates (works only with dns challenge).
   domains:
@@ -244,13 +246,15 @@ acme:
       #   - "test2.example2.com"
   ## ACME challenge type: "tls-sni-01", "tls-alpn-01", "http-01" or "dns-01"
   ## Note that "tls-sni-01" has been DEPRECATED.
-  challengeType: tls-alpn-01
+  challengeType: dns-01
   ## Configure dnsProvider to perform domain verification using dns challenge
   ## Applicable only if using the dns-01 challenge type
   delayBeforeCheck: 0
-  resolvers: []
-    # - 1.1.1.1:53
-    # - 8.8.8.8:53
+  resolvers:
+    - ns-30.awsdns-03.com
+    - ns-1616.awsdns-10.co.uk
+    - ns-1334.awsdns-38.org
+    - ns-807.awsdns-36.net
   ## Configure the endpoint used for the HTTP challenge
   ## Applicable only if using the http-01 challenge type
   httpChallenge:
@@ -329,10 +333,10 @@ acme:
       RFC2136_TSIG_KEY: ""
       RFC2136_TSIG_SECRET: ""
       RFC2136_TIMEOUT: ""
-    route53:
-      AWS_REGION: ""
-      AWS_ACCESS_KEY_ID: ""
-      AWS_SECRET_ACCESS_KEY: ""
+      #route53:
+      #AWS_REGION: ""
+      #AWS_ACCESS_KEY_ID: ""
+      #AWS_SECRET_ACCESS_KEY: ""
     vultr:
       VULTR_API_KEY: ""
   ## Save ACME certs to a persistent volume.
@@ -349,7 +353,7 @@ acme:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: managed-nfs-storage
     accessMode: ReadWriteOnce
     size: 1Gi
     ## A manually managed Persistent Volume Claim
@@ -358,9 +362,9 @@ acme:
     ##
     # existingClaim:
 dashboard:
-  enabled: false
-  domain: traefik.example.com
-  # serviceType: ClusterIP
+  enabled: true
+  domain: traefik.lab.oliviermichaelis.dev
+  serviceType: ClusterIP
   service: {}
     # annotations:
     #   key: value
@@ -422,7 +426,7 @@ accessLogs:
       names: {}
         # Authorization: redact
 rbac:
-  enabled: false
+  enabled: true
 ## Enable the /metrics endpoint, for now only supports prometheus
 ## set to true to enable metric collection by prometheus
 metrics:
