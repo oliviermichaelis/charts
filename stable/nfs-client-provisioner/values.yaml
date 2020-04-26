@@ -12,7 +12,7 @@ image:
 
 nfs:
   server: 192.168.1.10
-  path: /media/nfs/kubernetes
+  path: /media/ssd/kubernetes
   mountOptions:
 
 # For creating the StorageClass automatically:
