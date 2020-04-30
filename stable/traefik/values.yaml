@@ -260,8 +260,8 @@ acme:
   httpChallenge:
     entrypoint: http
   dnsProvider:
-    name: nil
-    existingSecretName: ""
+    name: route53
+    existingSecretName: "traefik-dnsprovider-config"
     auroradns:
       AURORA_USER_ID: ""
       AURORA_KEY: ""
@@ -333,10 +333,10 @@ acme:
       RFC2136_TSIG_KEY: ""
       RFC2136_TSIG_SECRET: ""
       RFC2136_TIMEOUT: ""
-      #route53:
-      #AWS_REGION: ""
-      #AWS_ACCESS_KEY_ID: ""
-      #AWS_SECRET_ACCESS_KEY: ""
+    route53:
+      AWS_REGION: "eu-central-1"
+      AWS_ACCESS_KEY_ID: ""
+      AWS_SECRET_ACCESS_KEY: ""
     vultr:
       VULTR_API_KEY: ""
   ## Save ACME certs to a persistent volume.
